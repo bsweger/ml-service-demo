@@ -1,0 +1,2 @@
+export MLFLOW_TRACKING_URI=http://127.0.0.1:7777
+export MODEL_BASE_NAME=prophet-retail-forecaster-store-

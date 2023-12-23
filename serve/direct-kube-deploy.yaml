@@ -1,0 +1,44 @@
+# Defines the deployment of the fastapi app that serves the model
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fast-api-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: fast-api
+  template:
+    metadata:
+      labels:
+        app: fast-api
+    spec:
+      containers:
+      - name: fast-api
+        # Replace line below with the location of your application's container
+        image: bsweger/bsweger:custom-forecast-service
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+          - containerPort: 8080
+        imagePullPolicy: Always
+      # imagePullSecrets is required for kubernetes to pull from private docker
+      # to create a secret: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+      imagePullSecrets:
+      - name: regcred
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: fast-api-service
+spec:
+  selector:
+    app: fast-api
+  ports:
+  - protocol: "TCP" 
+    port: 8080
+    targetPort: 8080
+  type: LoadBalancer
