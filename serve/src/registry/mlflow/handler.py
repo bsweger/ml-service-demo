@@ -38,7 +38,7 @@ class MLFlowHandler:
 
     def get_production_model(self, store_id: str) -> PyFuncModel:
         model_name = f'prophet-retail-forecaster-store-{store_id}'
-        model_uri = f'models:/{model_name}/production'
+        model_uri = f'models:/{model_name}@production'
         model = mlflow.pyfunc.load_model(model_uri=model_uri)
         logging.info(f'Got model {model} from {model_uri}')
         return model
