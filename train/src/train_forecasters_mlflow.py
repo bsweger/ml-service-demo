@@ -107,10 +107,6 @@ def main():
     test_data = []
     train_indices = []
     for store_id in store_ids:
-        ###### test on a handful of stores #####
-        if store_id not in [2]:
-            continue
-        ###### end test #####
         df_store = prep_store_data(df, store_id=store_id)
         predicted, df_train, df_test, train_index = train_predict(
             store_id=store_id,
