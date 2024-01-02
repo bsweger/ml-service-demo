@@ -41,18 +41,57 @@ To run this project: clone the repo, open a terminal, make sure you're using Pyt
 
 ### Install the `train` dependencies
 
-1. From the root of the repo: `cd train`
-2. Create a Python virtual environment: `python3 -m venv .venv --prompt train`
-3. Activate the virtual environment: `source .venv/bin/activate`
-4. Install the dependencies: `pip install -r requirements.txt`
+1. From the root of the repo:
+
+    ```bash
+    cd train
+    ```
+
+2. Create a Python virtual environment:
+
+    ```bash
+    python3 -m venv .venv --prompt train
+    ```
+
+3. Activate the virtual environment:
+
+    ```bash
+    source .venv/bin/activate
+    ```
+
+4. Install the dependencies:
+
+    ```bash
+    pip install -r requirements.txt
+    ```
 
 ### Install the `serve` dependencies
 
 1. Open a new terminal window
-2. From the root of the repo: `cd serve`
-3. Create a Python virtual environment: `python3 -m venv .venv --prompt serve`
-4. Activate the virtual environment: `source .venv/bin/activate`
-5. Install the dependencies: `pip install -r requirements.txt`
+
+2. From the root of the repo:
+
+    ```bash
+    cd serve
+    ```
+
+3. Create a Python virtual environment:
+
+    ```bash
+    python3 -m venv .venv --prompt serve
+    ```
+
+4. Activate the virtual environment:
+
+    ```bash
+    source .venv/bin/activate
+    ```
+
+5. Install the dependencies:
+
+    ```bash
+    pip install -r requirements.txt
+    ```
 
 ### Start the local MLflow tracking server
 
@@ -63,11 +102,21 @@ MLflow stores two types of data:
 
 For this project, which runs everything locally, the metadata is stored in a local sqlite database that MLflow creates automatically (`mlflow.db`). The model artifacts are stored in a directory called `.mlruns` (also created automatically by MLflow).
 
-1. From the root of the repo: `cd train`
-2. Make sure you're in the `train` virtual environment created above: `source .venv/bin/activate`
+1. From the root of the repo:
+
+    ```bash
+    cd train
+    ```
+
+2. Make sure you're in the `train` virtual environment created above:
+
+    ```bash
+    source .venv/bin/activate
+    ```
+
 3. Start the MLflow tracking server. The `--backend-store-uri` and `--artifacts-destination` directives tell MLflow where to store the metadata and model artifacts described above:
 
-    ```
+    ```bash
     mlflow server \
     --backend-store-uri sqlite:///mlflow.db \
     --artifacts-destination .mlruns \
@@ -82,9 +131,25 @@ This project uses a dataset of retail store sales from Kaggle. The final goal is
 **Note:** In keeping with this repo's "simplest possible" ethos, the script below trains each store model sequentially (the book has instructions for using Ray to train them in parallel).
 
 1. Open a new terminal window
-2. From the root of the repo: `cd train`
-3. Make sure you're in the `train` virtual environment created above: `source .venv/bin/activate`
-4. Run the script that downloads the retail dataset, creates a new MLflow experiment, and performs an MLflow run for each retail store: `python src/train_forecasters_mlflow.py`
+
+2. From the root of the repo:
+
+    ```bash
+    cd train
+    ```
+
+3. Make sure you're in the `train` virtual environment created above:
+
+    ```bash
+    source .venv/bin/activate
+    ```
+
+4. Run the script that downloads the retail dataset, creates a new MLflow experiment, and performs an MLflow run for each retail store:
+
+    ```bash
+    python src/train_forecasters_mlflow.py
+    ```
+
 5. Once the above script completes, you can view the output in the `Experiments` section of your local MLflow server: http://localhost:7777. You should see an experiment called `retail-forecaster`. Click that link to see a list of MLflow runs (one for each store in the retail dataset). Clicking on a run's link will display metadata and a series of related artifacts (including the trained model).
 
 ## Registering and tagging models
@@ -102,13 +167,35 @@ You can use the MLFlow UI (http://localhost:7777) to register models:
 
 ### Running the API locally
 
-1. From the root of the repo: `cd serve`
-2. Make sure you're in the `serve` virtual environment created above: `source .venv/bin/activate`
-3. Navigate to the directory that contains the FastAPI application: `cd src`
-3. Start the FastAPI server: `uvicorn app:app --host 127.0.01 --port 8080 --reload`
-4. In a browser, access the "healthcheck" route to verify that the API can access the MLflow tracking server: http://localhost:8080/health/
-5. Request a forecast from one of the production models created above:  
+1. From the root of the repo:
+
+    ```bash
+    cd serve
     ```
+
+2. Make sure you're in the `serve` virtual environment created above:
+
+    ```bash
+    source .venv/bin/activate
+    ```
+
+3. Navigate to the directory that contains the FastAPI application:
+
+    ```bash
+    cd src
+    ```
+
+4. Start the FastAPI server:
+
+    ```bash
+    uvicorn app:app --host 127.0.01 --port 8080 --reload
+    ```
+
+5. In a browser, access the "healthcheck" route to verify that the API can access the MLflow tracking server: http://localhost:8080/health/
+
+6. Request a forecast from one of the production models created above:
+
+    ```bash
     curl --request POST --location \
       --url http://127.0.0.1:8080/forecast \
       --header 'content-type: application/json' \
@@ -118,7 +205,9 @@ You can use the MLFlow UI (http://localhost:7777) to register models:
             "end_date": "2023-12-03T00:00:00Z"
         }]'
     ```
-6. A successful request will return a JSON response with the forecast data for the specified store and date range. For example:  
-    ```
+
+7. A successful request will return a JSON response with the forecast data for the specified store and date range. For example:
+
+    ```json
     [{"request":{"store_id":"1114","begin_date":"2023-12-01T00:00:00Z","end_date":"2023-12-03T00:00:00Z"},"forecast":[{"timestamp":"2023-12-01T00:00:00","value":24726},{"timestamp":"2023-12-02T00:00:00","value":26097},{"timestamp":"2023-12-03T00:00:00","value":25263}]}]
     ```
