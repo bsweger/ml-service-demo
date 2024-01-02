@@ -1,14 +1,14 @@
 [project]
 name = 'ml-service-tutorial-serve'
 description = 'FastAPI service from Machine Learning Engineering With Python'
-license = {text = "MIT License"}
+license = {text = 'MIT License'}
 readme = 'README.md'
 requires-python = '>=3.10'
 classifiers = [
     'Programming Language :: Python :: 3',
     'License :: OSI Approved :: MIT License',
 ]
-dynamic = ["version"]
+dynamic = ['version']
 
 dependencies = [
     'fastapi',
@@ -23,22 +23,24 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     'mypy',
+    'pre-commit',
     'pytest',
     'ruff',
 ]
 
 [tools.setuptools]
-packages = ["src"]
+packages = ['src']
 
 [build-system]
 # Minimum requirements for the build system to execute.
-requires = ["setuptools", "wheel"]  # PEP 508 specifications.
+requires = ['setuptools', 'wheel']  # PEP 508 specifications.
 
 [tool.ruff]
 line-length = 120
+extend-select = ['I']
 
 [tool.ruff.format]
 quote-style = 'single'
 
 [tool.setuptools.dynamic]
-version = {attr = "src.__version__"}
+version = {attr = 'src.__version__'}

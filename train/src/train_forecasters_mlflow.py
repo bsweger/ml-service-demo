@@ -119,12 +119,6 @@ def main():
         test_data.append(df_test)
         train_indices.append(train_index)
 
-    results = {
-        'predictions': predictions,
-        'train_data': train_data,
-        'test_data': test_data,
-        'train_indices': train_indices,
-    }
     total_time = time.time() - start
 
     logger.info(
