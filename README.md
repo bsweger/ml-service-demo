@@ -11,6 +11,7 @@ This modified version includes only the code that is necessary to:
 * Train Prophet-based forecasting models for a series of retail stores
 * Log the model artifacts to MlFlow
 * Create a FastAPI-based microservice to serve the model
+* Use Kubernetes (locally, via minikube) to deploy the microservice
 
 The goal is piecing together the components of a machine learning project, not to build the best possible model or demonstrate engineering best practices.
 
@@ -29,15 +30,19 @@ The setup instructions below are for running both the MLflow tracking server and
 To run this code, you will need the following installed on your local machine:
 
 * Python 3.10
+* minikube: https://minikube.sigs.k8s.io/docs/start/
+* kubectl, the Kubernetes command-line tool: https://kubernetes.io/docs/tasks/tools/#kubectl
+* Docker: https://docs.docker.com/get-docker/
 
 In addition, you will need:
 
 * A Kaggle account (so the training script can download the [dataset](https://www.kaggle.com/c/rossmann-store-sales/data))
+* Access to a docker registry (so you can push the API image to a registry that minikube can access)
 
 
 ## Setup
 
-To run this project: clone the repo, open a terminal, make sure you're using Python 3.10, and follow the instructions below.
+Once all the above prerequisites are satistifed, you're ready to run this proejct: clone the repo, open a terminal, make sure you're using Python 3.10, and follow the instructions below.
 
 ### Install the `train` dependencies
 
@@ -165,7 +170,15 @@ You can use the MLFlow UI (http://localhost:7777) to register models:
 
 ## Accessing forecast data via the API
 
-### Running the API locally
+Once the local MLFlow tracking server is running, you're ready to package and deploy the API service that will serve the forecasts.
+
+### Creating and pushing a Docker image for the API
+
+To run in a Kubernetes cluster, the API application will need to be packaged as a Docker image and pushed to a registry that the cluster can access.
+
+These instructions assume you're using Docker Hub as your registry and will be pushing to a public repository (if you're using a private registry, there will an extract change to your Kubernetes manifeset, noted below).
+
+Make sure that Docker is running on your machine and follow the steps below.
 
 1. From the root of the repo:
 
@@ -173,27 +186,58 @@ You can use the MLFlow UI (http://localhost:7777) to register models:
     cd serve
     ```
 
-2. Make sure you're in the `serve` virtual environment created above:
+2. Create a Docker [image](https://docs.docker.com/get-started/overview/#images) (essentially, a "template" that describes how to build and run the API application). The `build` command references the project's [Dockerfile](Dockerfile) to create the image and store it locally.
 
     ```bash
-    source .venv/bin/activate
+    docker build -t <your docker registry>/forecasting-service:latest .
     ```
 
-3. Navigate to the directory that contains the FastAPI application:
+    For example: `docker build -t janeway/forecasting-service:latest .`
+    
+    Running this command for the first time will take a few minutes, as Docker pulls a Python base image from Docker Hub and installs the project's dependencies.
+
+    When the build completes, you can see the image on your local machine: `docker images`.
+
+3. Push a copy of the local image to a docker registry (_e.g._, Docker Hub):
 
     ```bash
-    cd src
+    docker push <your docker registry>/forecasting-service:latest
     ```
 
-4. Start the FastAPI server:
+    For example: `docker push janeway/forecasting-service:latest`
+
+    The [registry](https://docs.docker.com/get-started/overview/#docker-registries) is where your local Kubernetes cluster will get the image and use it to deploy [containers](https://docs.docker.com/get-started/overview/#containers) that run the API service.
+
+### Deploying the API service via a local Kubernetes cluster (using minikube)
+
+Once the API's Docker image is available in a registry, you can use it to create a Kubernetes deployment. This demo project uses miniube to run a Kubernetes cluster on your local machine.
+
+1. Modify the project's Kubernetes manifest [direct-kube-deploy.yaml](direct-kube-deploy.yaml):
+
+    * Replace `<your image location>` with the location of you image you pushed to a Docker registry in the previous section.
+    * **Optional**: if you're using a private Docker registry, [create a secret that allows Kubernetes/minikube to access it](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/), and add that secret name to the `imagePullSecrets` section of the manifest.
+
+2. Start minikube (this can take a few minutes):
 
     ```bash
-    uvicorn app:app --host 127.0.01 --port 8080 --reload
+    minikube start
     ```
 
-5. In a browser, access the "healthcheck" route to verify that the API can access the MLflow tracking server: http://localhost:8080/health/
+3. Create the Kubernetes deployment and service as specified the project's Kubernetes manifest:
 
-6. Request a forecast from one of the production models created above:
+    ```bash
+    kubectl apply -f direct-kube-deploy.yaml
+    ```
+
+8. Open a tunnel that will allow the Kubernetes service to access the host machine:
+
+    ```bash
+    minikube tunnel
+    ```
+
+9. You should now be able to access the API! In a browser, access the "healthcheck" route to verify that the API can access the MLflow tracking server: http://localhost:8080/health/
+
+10. Request a forecast from one of the production models created above:
 
     ```bash
     curl --request POST --location \
@@ -206,7 +250,7 @@ You can use the MLFlow UI (http://localhost:7777) to register models:
         }]'
     ```
 
-7. A successful request will return a JSON response with the forecast data for the specified store and date range. For example:
+11. A successful request will return a JSON response with the forecast data for the specified store and date range. For example:
 
     ```json
     [{"request":{"store_id":"1114","begin_date":"2023-12-01T00:00:00Z","end_date":"2023-12-03T00:00:00Z"},"forecast":[{"timestamp":"2023-12-01T00:00:00","value":24726},{"timestamp":"2023-12-02T00:00:00","value":26097},{"timestamp":"2023-12-03T00:00:00","value":25263}]}]
