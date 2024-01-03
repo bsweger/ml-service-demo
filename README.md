@@ -186,7 +186,7 @@ Make sure that Docker is running on your machine and follow the steps below.
     cd serve
     ```
 
-2. Create a Docker [image](https://docs.docker.com/get-started/overview/#images) (essentially, a "template" that describes how to build and run the API application). The `build` command references the project's [Dockerfile](Dockerfile) to create the image and store it locally.
+2. Create a Docker [image](https://docs.docker.com/get-started/overview/#images) (essentially, a "template" that describes how to build and run the API application). The `build` command references the project's [Dockerfile](serve/Dockerfile) to create the image and store it locally.
 
     ```bash
     docker build -t <your docker registry>/forecasting-service:latest .
@@ -212,7 +212,7 @@ Make sure that Docker is running on your machine and follow the steps below.
 
 Once the API's Docker image is available in a registry, you can use it to create a Kubernetes deployment. This demo project uses miniube to run a Kubernetes cluster on your local machine.
 
-1. Modify the project's Kubernetes manifest [direct-kube-deploy.yaml](direct-kube-deploy.yaml):
+1. Modify the project's Kubernetes manifest [direct-kube-deploy.yaml](serve/direct-kube-deploy.yaml):
 
     * Replace `<your image location>` with the location of you image you pushed to a Docker registry in the previous section.
     * **Optional**: if you're using a private Docker registry, [create a secret that allows Kubernetes/minikube to access it](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/), and add that secret name to the `imagePullSecrets` section of the manifest.
