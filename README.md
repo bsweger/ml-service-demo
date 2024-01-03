@@ -193,7 +193,7 @@ Make sure that Docker is running on your machine and follow the steps below.
     ```
 
     For example: `docker build -t janeway/forecasting-service:latest .`
-    
+
     Running this command for the first time will take a few minutes, as Docker pulls a Python base image from Docker Hub and installs the project's dependencies.
 
     When the build completes, you can see the image on your local machine: `docker images`.
