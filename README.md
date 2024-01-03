@@ -129,6 +129,8 @@ For this project, which runs everything locally, the metadata is stored in a loc
     ```
 4. You should now be able to access the MLflow UI at http://localhost:7777. If you're prompted to opt-in to the new model registry UI, say yes.
 
+To ensure that subsequent setup steps work correctly, keep this terminal window open (_i.e._, keep the Mlflow server running).
+
 ## Training the models and logging their artifacts on MLflow
 
 This project uses a dataset of retail store sales from Kaggle. The final goal is a system that predicts future sales for a given store and date range. To accomplish this, we first need to train one model for each store.
