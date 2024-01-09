@@ -13,6 +13,7 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error
 EXPERIMENT_NAME = 'retail-forecaster'
 MODEL_BASE_NAME = 'prophet-retail-forecaster-store-'
 MLFLOW_URI = os.getenv('MLFLOW_TRACKING_URI', 'http://localhost:7777')
+TEST_MODE = True  # set to True to test on a subset of the data
 
 mlflow.set_tracking_uri(MLFLOW_URI)
 
@@ -97,6 +98,9 @@ def main():
     # Get the unique store IDs
     # store_ids = dataset.unique("Store") # if you were using Ray DataFrame
     store_ids = df['Store'].unique()  # [0:50] #for testing
+    if TEST_MODE:
+        # when testing, only train models on a subset of the retail stores
+        store_ids = [40, 1115, 2]
 
     # Define the parameters for the Prophet model
     seasonality = {'yearly': True, 'weekly': True, 'daily': False}
