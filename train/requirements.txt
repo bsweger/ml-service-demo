@@ -6,7 +6,7 @@
 #
 alembic==1.10.3
     # via mlflow
-certifi==2022.12.7
+certifi==2024.7.4
     # via
     #   kaggle
     #   requests
@@ -39,23 +39,23 @@ exceptiongroup==1.2.0
     # via pytest
 filelock==3.13.1
     # via virtualenv
-flask==2.2.3
+flask==2.2.5
     # via mlflow
-fonttools==4.39.2
+fonttools==4.43.0
     # via matplotlib
 gitdb==4.0.10
     # via gitpython
-gitpython==3.1.31
+gitpython==3.1.41
     # via mlflow
 greenlet==3.0.1
     # via sqlalchemy
-gunicorn==20.1.0
+gunicorn==23.0.0
     # via mlflow
 holidays==0.39
     # via prophet
 identify==2.5.33
     # via pre-commit
-idna==3.4
+idna==3.7
     # via requests
 importlib-metadata==6.1.0
     # via mlflow
@@ -65,7 +65,7 @@ iniconfig==2.0.0
     # via pytest
 itsdangerous==2.1.2
     # via flask
-jinja2==3.1.2
+jinja2==3.1.6
     # via
     #   flask
     #   mlflow
@@ -88,7 +88,7 @@ matplotlib==3.7.1
     # via
     #   mlflow
     #   prophet
-mlflow==2.9.2
+mlflow==2.20.3
     # via ml-service-tutorial-train (pyproject.toml)
 mypy==1.8.0
     # via ml-service-tutorial-train (pyproject.toml)
@@ -121,7 +121,7 @@ pandas==1.5.3
     #   ml-service-tutorial-train (pyproject.toml)
     #   mlflow
     #   prophet
-pillow==9.4.0
+pillow==10.3.0
     # via matplotlib
 platformdirs==4.1.0
     # via virtualenv
@@ -133,7 +133,7 @@ prophet==1.1.5
     # via ml-service-tutorial-train (pyproject.toml)
 protobuf==4.22.1
     # via mlflow
-pyarrow==11.0.0
+pyarrow==14.0.1
     # via mlflow
 pyjwt==2.6.0
     # via databricks-cli
@@ -159,7 +159,7 @@ pyyaml==6.0
     #   pre-commit
 querystring-parser==1.2.4
     # via mlflow
-requests==2.28.2
+requests==2.32.2
     # via
     #   databricks-cli
     #   docker
@@ -167,7 +167,7 @@ requests==2.28.2
     #   mlflow
 ruff==0.1.10
     # via ml-service-tutorial-train (pyproject.toml)
-scikit-learn==1.2.2
+scikit-learn==1.5.1
     # via mlflow
 scipy==1.10.1
     # via
@@ -185,7 +185,7 @@ sqlalchemy==2.0.9
     # via
     #   alembic
     #   mlflow
-sqlparse==0.4.3
+sqlparse==0.5.0
     # via mlflow
 tabulate==0.9.0
     # via databricks-cli
@@ -197,7 +197,7 @@ tomli==2.0.1
     # via
     #   mypy
     #   pytest
-tqdm==4.65.0
+tqdm==4.66.3
     # via
     #   cmdstanpy
     #   kaggle
@@ -207,18 +207,18 @@ typing-extensions==4.5.0
     #   alembic
     #   mypy
     #   sqlalchemy
-urllib3==1.26.15
+urllib3==1.26.19
     # via
     #   docker
     #   kaggle
     #   requests
-virtualenv==20.25.0
+virtualenv==20.26.6
     # via pre-commit
 websocket-client==1.5.1
     # via docker
-werkzeug==2.2.3
+werkzeug==3.0.6
     # via flask
-zipp==3.15.0
+zipp==3.19.1
     # via importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:

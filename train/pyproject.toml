@@ -13,7 +13,7 @@ dynamic = ['version']
 # boto3 is required if storing mlflow artifacts on s3
 dependencies = [
     'kaggle',
-    'mlflow==2.9.2',
+    'mlflow==2.20.3',
     'pandas',
     'prophet==1.1.5',
 ]
