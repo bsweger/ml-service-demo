@@ -159,7 +159,7 @@ pyyaml==6.0
     #   pre-commit
 querystring-parser==1.2.4
     # via mlflow
-requests==2.32.2
+requests==2.32.4
     # via
     #   databricks-cli
     #   docker
