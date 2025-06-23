@@ -131,7 +131,7 @@ pre-commit==3.6.0
     # via ml-service-tutorial-train (pyproject.toml)
 prophet==1.1.5
     # via ml-service-tutorial-train (pyproject.toml)
-protobuf==4.22.1
+protobuf==4.25.8
     # via mlflow
 pyarrow==14.0.1
     # via mlflow
@@ -207,7 +207,7 @@ typing-extensions==4.5.0
     #   alembic
     #   mypy
     #   sqlalchemy
-urllib3==1.26.19
+urllib3==2.5.0
     # via
     #   docker
     #   kaggle
